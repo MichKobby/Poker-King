@@ -243,7 +243,13 @@ export default function GameHistory() {
                                     : player.net_result < 0 
                                     ? 'text-red-400' 
                                     : 'text-gray-300'
-                                }`}>
+                                }`} style={{
+                                  color: player.net_result > 0 
+                                    ? '#4ade80' 
+                                    : player.net_result < 0 
+                                    ? '#f87171' 
+                                    : '#cbd5e1'
+                                }}>
                                   {formatCurrency(player.net_result)}
                                 </span>
                               </td>
