@@ -1,12 +1,13 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Trophy, TrendingUp, TrendingDown, DollarSign, Calendar, Users, RefreshCw } from 'lucide-react'
-import { supabase, LeaderboardEntryWithRebuys, RecentGameEntryWithRebuys } from '@/lib/supabase'
+import { Trophy, TrendingUp, TrendingDown, DollarSign, Calendar, Users, RefreshCw, Zap } from 'lucide-react'
+import { supabase, LeaderboardEntryWithRebuysAndBusts, RecentGameEntryWithRebuys, BustClubEntry } from '@/lib/supabase'
 
 export default function LeaderboardWithRebuys() {
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntryWithRebuys[]>([])
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntryWithRebuysAndBusts[]>([])
   const [recentGames, setRecentGames] = useState<RecentGameEntryWithRebuys[]>([])
+  const [bustClub, setBustClub] = useState<BustClubEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [showRebuys, setShowRebuys] = useState(true)
@@ -19,22 +20,31 @@ export default function LeaderboardWithRebuys() {
     try {
       setLoading(true)
       
-      // Fetch enhanced leaderboard data with rebuys
+      // Fetch enhanced leaderboard data with rebuys and busts
       const { data: leaderboardData, error: leaderboardError } = await supabase
-        .from('leaderboard_with_rebuys')
+        .from('leaderboard_with_rebuys_and_busts')
         .select('*')
       
       if (leaderboardError) throw leaderboardError
 
       // Fetch enhanced recent games data with rebuys
       const { data: recentData, error: recentError } = await supabase
-        .from('recent_games_with_rebuys')
+        .from('recent_games_with_rebuys_and_busts')
         .select('*')
       
       if (recentError) throw recentError
 
+      // Fetch bust club data
+      const { data: bustData, error: bustError } = await supabase
+        .from('bust_club_leaderboard')
+        .select('*')
+        .limit(10) // Get top 10 bust club members
+      
+      if (bustError) throw bustError
+
       setLeaderboard(leaderboardData || [])
       setRecentGames(recentData || [])
+      setBustClub(bustData || [])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
@@ -111,9 +121,8 @@ export default function LeaderboardWithRebuys() {
         </div>
       </div>
 
-
       {/* Special Recognition Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Shark of the Month */}
         {sharkOfTheMonth && (
           <div className="poker-card p-6 border-2 border-green-500/50">
@@ -161,7 +170,31 @@ export default function LeaderboardWithRebuys() {
             </div>
           </div>
         )}
+
+        {/* Bust Club Champion */}
+        {bustClub.length > 0 && bustClub[0] && (
+          <div className="poker-card p-6 border-2 border-orange-500/50">
+            <div className="flex items-center mb-4">
+              <Zap className="h-8 w-8 text-orange-400 mr-3" />
+              <div>
+                <h3 className="text-xl font-bold text-orange-400">Bust Club Champion</h3>
+                <p className="text-gray-400 text-sm">Most bust events</p>
+              </div>
+            </div>
+            <div className="text-center">
+              <p className="text-2xl font-bold text-white mb-2">{bustClub[0].name}</p>
+              <p className="text-orange-400 text-xl font-semibold">
+                {bustClub[0].total_bust_count} busts
+              </p>
+              <p className="text-gray-400 text-sm mt-1">
+                {bustClub[0].recent_busts} recent busts
+              </p>
+            </div>
+          </div>
+        )}
+
       </div>
+
 
       {/* Main Leaderboard */}
       <div className="poker-card">
@@ -255,6 +288,67 @@ export default function LeaderboardWithRebuys() {
           </div>
         )}
       </div>
+
+      {/* Bust Club Leaderboard */}
+      {bustClub.length > 0 && (
+        <div className="poker-card">
+          <div className="p-6 border-b border-gray-700">
+            <h2 className="text-2xl font-bold text-orange-400 flex items-center">
+              <Zap className="h-6 w-6 mr-2" />
+              Bust Club Leaderboard
+            </h2>
+            <p className="text-gray-400 text-sm mt-1">Players who lost all their money (rebuys + zero cashouts)</p>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-700">
+                  <th className="text-left p-4 text-gray-300 font-semibold">Rank</th>
+                  <th className="text-left p-4 text-gray-300 font-semibold">Player</th>
+                  <th className="text-center p-4 text-gray-300 font-semibold">Total Busts</th>
+                  <th className="text-center p-4 text-gray-300 font-semibold">Games Played</th>
+                  <th className="text-center p-4 text-gray-300 font-semibold">Recent Busts</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bustClub.map((player, index) => (
+                  <tr key={player.id} className="border-b border-gray-800 hover:bg-gray-800/50">
+                    <td className="p-4">
+                      <div className="flex items-center">
+                        {index === 0 && (
+                          <Zap className="h-5 w-5 text-orange-400 mr-2" />
+                        )}
+                        <span className="text-gray-300 font-semibold">#{index + 1}</span>
+                      </div>
+                    </td>
+                    <td className="p-4">
+                      <span className={`font-semibold ${
+                        index === 0 ? 'text-orange-400' : 
+                        index === 1 ? 'text-orange-300' : 
+                        index === 2 ? 'text-orange-200' : 'text-white'
+                      }`}>
+                        {player.name}
+                      </span>
+                    </td>
+                    <td className="p-4 text-center">
+                      <span className="text-orange-400 font-bold text-lg">
+                        {player.total_bust_count}
+                      </span>
+                    </td>
+                    <td className="p-4 text-center text-gray-300">
+                      {player.games_played}
+                    </td>
+                    <td className="p-4 text-center text-gray-400">
+                      {player.recent_busts}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
     </div>
   )

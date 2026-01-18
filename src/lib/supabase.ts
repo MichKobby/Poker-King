@@ -90,6 +90,56 @@ export type GameEntry = {
   net_result: number
 }
 
+export type BustEvent = {
+  id: string
+  game_log_id: string
+  player_id: string
+  game_date: string
+  bust_sequence: number
+  created_at: string
+  updated_at: string
+}
+
+export type GameLogWithRebuysAndBusts = {
+  id: string
+  player_id: string
+  game_date: string
+  initial_buy_in: number
+  total_rebuys: number
+  total_investment: number
+  cash_out: number
+  net_result_with_rebuys: number
+  original_net_result: number
+  created_at: string
+  updated_at: string
+  rebuy_count: number
+  bust_count: number
+}
+
+export type LeaderboardEntryWithRebuysAndBusts = {
+  id: string
+  name: string
+  games_played: number
+  total_initial_buy_ins: number
+  total_rebuys: number
+  total_investment: number
+  total_cash_outs: number
+  net_profit_with_rebuys: number
+  original_net_profit: number
+  total_rebuy_instances: number
+  total_bust_count: number
+  bust_rate_percentage: number
+}
+
+export type BustClubEntry = {
+  id: string
+  name: string
+  games_played: number
+  total_bust_count: number
+  bust_rate_percentage: number
+  recent_busts: number
+}
+
 export type GameEntryWithRebuys = {
   player_name: string
   final_amount: number

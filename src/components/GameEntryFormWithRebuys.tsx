@@ -208,8 +208,58 @@ export default function GameEntryFormWithRebuys() {
         if (rebuyError) throw rebuyError
       }
 
+      // Create bust events for two scenarios:
+      // 1. Each rebuy = one bust (lost all money and had to rebuy)
+      // 2. Cash out with $0 = one bust (lost all money and went home empty)
+      const bustEntries: {
+        game_log_id: string;
+        player_id: string;
+        game_date: string;
+        bust_sequence: number;
+      }[] = []
+
+      for (let i = 0; i < players.length; i++) {
+        const player = players[i]
+        const gameLogId = insertedGameLogs[i].id
+        const playerData = allPlayers?.find(p => p.name === player.player_name.trim())
+
+        // Bust events from rebuys (each rebuy = one bust)
+        if (player.rebuys.length > 0) {
+          player.rebuys.forEach((rebuyAmount, rebuyIndex) => {
+            if (rebuyAmount > 0) {
+              bustEntries.push({
+                game_log_id: gameLogId,
+                player_id: playerData!.id,
+                game_date: gameDate,
+                bust_sequence: rebuyIndex + 1
+              })
+            }
+          })
+        }
+
+        // Additional bust event if player cashed out with $0 (and didn't already have rebuys)
+        if (player.final_amount === 0) {
+          const nextSequence = player.rebuys.filter(r => r > 0).length + 1
+          bustEntries.push({
+            game_log_id: gameLogId,
+            player_id: playerData!.id,
+            game_date: gameDate,
+            bust_sequence: nextSequence
+          })
+        }
+      }
+
+      if (bustEntries.length > 0) {
+        const { error: bustError } = await supabase
+          .from('bust_events')
+          .insert(bustEntries)
+
+        if (bustError) throw bustError
+      }
+
       const totalRebuys = rebuyEntries.length
-      setSuccess(`Game recorded successfully for ${players.length} players with ${totalRebuys} rebuys!`)
+      const totalBusts = bustEntries.length
+      setSuccess(`Game recorded successfully for ${players.length} players with ${totalRebuys} rebuys and ${totalBusts} bust events!`)
       
       // Reset form
       setGameDate('')
