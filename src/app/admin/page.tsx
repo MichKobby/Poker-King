@@ -1,5 +1,5 @@
-import GameEntryForm from "@/components/GameEntryForm";
+import GameEntryFormWithRebuys from "@/components/GameEntryFormWithRebuys";
 
 export default function AdminPage() {
-  return <GameEntryForm />;
+  return <GameEntryFormWithRebuys />;
 }

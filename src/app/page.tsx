@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Leaderboard from "@/components/Leaderboard";
+import LeaderboardWithRebuys from "@/components/LeaderboardWithRebuys";
 
 export default function Home() {
   const [mounted, setMounted] = useState(false)
@@ -21,5 +21,5 @@ export default function Home() {
     )
   }
 
-  return <Leaderboard />;
+  return <LeaderboardWithRebuys />;
 }

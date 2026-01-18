@@ -38,7 +38,60 @@ export type RecentGameEntry = {
   recent_profit: number
 }
 
+export type Rebuy = {
+  id: string
+  game_log_id: string
+  player_id: string
+  game_date: string
+  rebuy_amount: number
+  rebuy_sequence: number
+  created_at: string
+  updated_at: string
+}
+
+export type GameLogWithRebuys = {
+  id: string
+  player_id: string
+  game_date: string
+  initial_buy_in: number
+  total_rebuys: number
+  total_investment: number
+  cash_out: number
+  net_result_with_rebuys: number
+  original_net_result: number
+  created_at: string
+  updated_at: string
+  rebuy_count: number
+}
+
+export type LeaderboardEntryWithRebuys = {
+  id: string
+  name: string
+  games_played: number
+  total_initial_buy_ins: number
+  total_rebuys: number
+  total_investment: number
+  total_cash_outs: number
+  net_profit_with_rebuys: number
+  original_net_profit: number
+  total_rebuy_instances: number
+}
+
+export type RecentGameEntryWithRebuys = {
+  id: string
+  name: string
+  recent_profit_with_rebuys: number
+  recent_profit_original: number
+  recent_total_rebuys: number
+}
+
 export type GameEntry = {
   player_name: string
   net_result: number
+}
+
+export type GameEntryWithRebuys = {
+  player_name: string
+  final_amount: number
+  rebuys: number[]
 }

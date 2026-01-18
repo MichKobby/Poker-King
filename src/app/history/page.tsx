@@ -1,5 +1,5 @@
-import GameHistory from "@/components/GameHistory";
+import GameHistoryWithRebuys from "@/components/GameHistoryWithRebuys";
 
 export default function HistoryPage() {
-  return <GameHistory />;
+  return <GameHistoryWithRebuys />;
 }
