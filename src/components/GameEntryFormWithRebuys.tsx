@@ -407,7 +407,7 @@ export default function GameEntryFormWithRebuys() {
                       </label>
                       <input
                         type="number"
-                        value={player.final_amount || ''}
+                        value={player.final_amount ?? ''}
                         onChange={(e) => updatePlayer(playerIndex, 'final_amount', Number(e.target.value))}
                         className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-poker-gold-400 focus:border-transparent"
                         min="0"
