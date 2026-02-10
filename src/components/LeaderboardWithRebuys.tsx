@@ -171,23 +171,23 @@ export default function LeaderboardWithRebuys() {
           </div>
         )}
 
-        {/* Bust Club Champion */}
+        {/* The Zero List Leader */}
         {bustClub.length > 0 && bustClub[0] && (
           <div className="poker-card p-6 border-2 border-orange-500/50">
             <div className="flex items-center mb-4">
               <Zap className="h-8 w-8 text-orange-400 mr-3" />
               <div>
-                <h3 className="text-xl font-bold text-orange-400">Bust Club Champion</h3>
-                <p className="text-gray-400 text-sm">Most bust events</p>
+                <h3 className="text-xl font-bold text-orange-400">The Zero List Leader</h3>
+                <p className="text-gray-400 text-sm">Lost all their money the most</p>
               </div>
             </div>
             <div className="text-center">
               <p className="text-2xl font-bold text-white mb-2">{bustClub[0].name}</p>
               <p className="text-orange-400 text-xl font-semibold">
-                {bustClub[0].total_bust_count} busts
+                {bustClub[0].total_bust_count} times at zero
               </p>
               <p className="text-gray-400 text-sm mt-1">
-                {bustClub[0].recent_busts} recent busts
+                {bustClub[0].recent_busts} recent
               </p>
             </div>
           </div>
@@ -289,15 +289,15 @@ export default function LeaderboardWithRebuys() {
         )}
       </div>
 
-      {/* Bust Club Leaderboard */}
+      {/* The Zero List */}
       {bustClub.length > 0 && (
         <div className="poker-card">
           <div className="p-6 border-b border-gray-700">
             <h2 className="text-2xl font-bold text-orange-400 flex items-center">
               <Zap className="h-6 w-6 mr-2" />
-              Bust Club Leaderboard
+              The Zero List
             </h2>
-            <p className="text-gray-400 text-sm mt-1">Players who lost all their money (rebuys + zero cashouts)</p>
+            <p className="text-gray-400 text-sm mt-1">Players who lost all their money</p>
           </div>
 
           <div className="overflow-x-auto">
@@ -306,7 +306,7 @@ export default function LeaderboardWithRebuys() {
                 <tr className="border-b border-gray-700">
                   <th className="text-left p-4 text-gray-300 font-semibold">Rank</th>
                   <th className="text-left p-4 text-gray-300 font-semibold">Player</th>
-                  <th className="text-center p-4 text-gray-300 font-semibold">Total Busts</th>
+                  <th className="text-center p-4 text-gray-300 font-semibold">Times at Zero</th>
                   <th className="text-center p-4 text-gray-300 font-semibold">Games Played</th>
                   <th className="text-center p-4 text-gray-300 font-semibold">Recent Busts</th>
                 </tr>
